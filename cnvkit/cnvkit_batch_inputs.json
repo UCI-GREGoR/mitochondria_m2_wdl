@@ -1,0 +1,17 @@
+{
+  "cnvkit_germline.ref_cnn": "String",
+  "cnvkit_germline.memory_gb": "Float",
+  "cnvkit_germline.processes": "Int",
+  "cnvkit_germline.ref_flat": "File",
+  "cnvkit_germline.agg_medium_disk": "Int (optional, default = 300)",
+  "cnvkit_germline.cnvkit_docker": "String",
+  "cnvkit_germline.ref_fasta": "File",
+  "cnvkit_germline.agg_small_disk": "Int (optional, default = 200)",
+  "cnvkit_germline.proband_bams": "Array[File]",
+  "cnvkit_germline.agg_large_disk": "Int (optional, default = 400)",
+  "cnvkit_germline.access_bed": "File",
+  "cnvkit_germline.unaffected_bams": "Array[File]",
+  "cnvkit_germline.preemptible_tries": "Int (optional, default = 3)",
+  "cnvkit_germline.output_path": "String"
+}
+
