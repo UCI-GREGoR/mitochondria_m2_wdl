@@ -1,0 +1,21 @@
+{
+  "cnvkit_wgs_process.cnvkit_docker": "String (optional, default = \"docker.io/etal/cnvkit:0.9.10\")",
+  "cnvkit_wgs_process.ref_cnn": "File",
+  "cnvkit_wgs_process.sample_vcf": "File",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.scatter_png_name": "String? (optional)",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.sID": "String? (optional)",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.cnr_filename": "String? (optional)",
+  "cnvkit_wgs_process.ref_antitargets_bed": "File",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.cnv_vcf_name": "String? (optional)",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.call_cns_filename": "String? (optional)",
+  "cnvkit_wgs_process.cnvkit_coverage.sID": "String? (optional)",
+  "cnvkit_wgs_process.ref_fasta": "File",
+  "cnvkit_wgs_process.cnvkit_coverage.out_file_2": "String? (optional)",
+  "cnvkit_wgs_process.sample_bam": "File",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.cns_filename": "String? (optional)",
+  "cnvkit_wgs_process.cnvkit_coverage.out_file_1": "String? (optional)",
+  "cnvkit_wgs_process.ref_targets_bed": "File",
+  "cnvkit_wgs_process.processes": "Int (optional, default = 16)",
+  "cnvkit_wgs_process.cnvkit_fix_segment_call_export_plot.diagram_pdf_name": "String? (optional)"
+}
+
