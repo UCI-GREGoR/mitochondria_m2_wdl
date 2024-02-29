@@ -1,18 +1,18 @@
 {
   "cnvkit_wgs_reference.cnvkit_coverage.sID": "String? (optional)",
   "cnvkit_wgs_reference.bin_size": "Int (optional, default = 50000)",
-  "cnvkit_wgs_reference.bams": "Array[File]",
   "cnvkit_wgs_reference.cnvkit_coverage.out_file_1": "String? (optional)",
   "cnvkit_wgs_reference.cnvkit_docker": "String (optional, default = \"docker.io/etal/cnvkit:0.9.10\")",
   "cnvkit_wgs_reference.processes": "Int (optional, default = 16)",
   "cnvkit_wgs_reference.cnvkit_coverage.out_file_2": "String? (optional)",
-  "cnvkit_wgs_reference.ref_bam": "File",
+  "cnvkit_wgs_reference.ref_cram": "File",
   "cnvkit_wgs_reference.cnvkit_access_autobin.out_antitargets": "String? (optional)",
-  "cnvkit_wgs_reference.ref_cnn": "String",
   "cnvkit_wgs_reference.ref_fasta": "File",
   "cnvkit_wgs_reference.access_bed": "String? (optional)",
   "cnvkit_wgs_reference.ref_flat": "File",
   "cnvkit_wgs_reference.cnvkit_access_autobin.out_targets": "String? (optional)",
-  "cnvkit_wgs_reference.cnvkit_access_autobin.sID": "String? (optional)"
+  "cnvkit_wgs_reference.cnvkit_access_autobin.sID": "String? (optional)",
+  "cnvkit_wgs_reference.crams": "Array[File]",
+  "cnvkit_wgs_reference.ref_cnn": "String"
 }
 

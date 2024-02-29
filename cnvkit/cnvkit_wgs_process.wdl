@@ -7,9 +7,9 @@ version 1.0
 ## This WDL pipeline implements germline CNV calling using cnvkit.py batch
 ##
 ## Requirements/expectations :
-## - Samples and references in pair-end short-read mapped BAM/CRAM format
+## - Samples and references in pair-end short-read mapped CRAM format
 ## - Reference samples to call CNVs against (unaffected relatives of probands)
-## - Matching reference genome for bams/crams (e.g. hg38-no-alt)
+## - Matching reference genome for crams (e.g. hg38-no-alt)
 ##
 ## Output :
 ## - CNR and CNS coverage files, scatter and diagram plots
@@ -47,7 +47,7 @@ version 1.0
 workflow cnvkit_wgs_process {
   input {
     # Sample args
-    File sample_bam
+    File sample_cram
     File sample_vcf
 
     # Reference args
@@ -63,7 +63,7 @@ workflow cnvkit_wgs_process {
   call cnvkit_coverage {
     input:
       fasta = ref_fasta,
-      bam = sample_bam,
+      cram = sample_cram,
       targets = ref_targets_bed,
       antitargets = ref_antitargets_bed,
       docker = cnvkit_docker,
@@ -87,13 +87,13 @@ workflow cnvkit_wgs_process {
 
 task cnvkit_coverage {
   input {
-    File bam
+    File cram
     File fasta
     File targets
     File antitargets
-    String sID = basename(bam)  # accepts .bam and .cram
-    String out_file_1 = sID + ".targetcoverage.cnn"
-    String out_file_2 = sID + ".antitargetcoverage.cnn"
+    String sID = basename(cram, ".cram")  # accepts .cram
+    String targets_filename = sID + ".targetcoverage.cnn"
+    String antitargets_filename = sID + ".antitargetcoverage.cnn"
 
     String docker
     Int proc
@@ -103,18 +103,19 @@ task cnvkit_coverage {
     set -o pipefail
     set -e
 
+    # cram index must be formatted as "${sID}.cram.crai" and in the same path as the cram
     cnvkit.py coverage \
     --fasta ~{fasta} \
     --processes ~{proc} \
-    --output ~{out_file_1} \
-    ~{bam} \
+    --output ~{targets_filename} \
+    ~{cram} \
     ~{targets}
     
     cnvkit.py coverage \
     --fasta ~{fasta} \
     --processes ~{proc} \
-    --output ~{out_file_2} \
-    ~{bam} \
+    --output ~{antitargets_filename} \
+    ~{cram} \
     ~{antitargets}
   }
   runtime {
@@ -123,8 +124,8 @@ task cnvkit_coverage {
     cpu: proc
   }
   output {
-    File sample_target_cnn = out_file_1
-    File sample_antitarget_cnn = out_file_2
+    File sample_target_cnn = targets_filename
+    File sample_antitarget_cnn = antitargets_filename
   }
 }
 
@@ -136,7 +137,7 @@ task cnvkit_fix_segment_call_export_plot {
     File vcf
     String call_method
 
-    String sID = basename(target_cnn)
+    String sID = basename(target_cnn, ".targetcoverage.cnn")
     String cnr_filename = sID + ".cnr"
     String cns_filename = sID + ".cns"
     String call_cns_filename = sID + ".call.cns"
