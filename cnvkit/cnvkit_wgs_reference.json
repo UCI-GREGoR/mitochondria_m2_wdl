@@ -1,18 +1,10 @@
 {
-  "cnvkit_wgs_reference.cnvkit_coverage.sID": "String? (optional)",
-  "cnvkit_wgs_reference.bin_size": "Int (optional, default = 50000)",
-  "cnvkit_wgs_reference.cnvkit_coverage.out_file_1": "String? (optional)",
-  "cnvkit_wgs_reference.cnvkit_docker": "String (optional, default = \"docker.io/etal/cnvkit:0.9.10\")",
-  "cnvkit_wgs_reference.processes": "Int (optional, default = 16)",
-  "cnvkit_wgs_reference.cnvkit_coverage.out_file_2": "String? (optional)",
-  "cnvkit_wgs_reference.ref_cram": "File",
-  "cnvkit_wgs_reference.cnvkit_access_autobin.out_antitargets": "String? (optional)",
-  "cnvkit_wgs_reference.ref_fasta": "File",
-  "cnvkit_wgs_reference.access_bed": "String? (optional)",
-  "cnvkit_wgs_reference.ref_flat": "File",
-  "cnvkit_wgs_reference.cnvkit_access_autobin.out_targets": "String? (optional)",
-  "cnvkit_wgs_reference.cnvkit_access_autobin.sID": "String? (optional)",
-  "cnvkit_wgs_reference.crams": "Array[File]",
-  "cnvkit_wgs_reference.ref_cnn": "String"
+  "cnvkit_wgs_reference.ref_cram": "/mnt/data3/wgs-short-read/crams/NA12878_A_GER2310081EP_D1_D1_N1_LP230622262_UDI0045_PL230271_SEQ_2306270201.cram",
+  "cnvkit_wgs_reference.ref_fasta": "/mnt/data1/ref/hg38/invitae_ref/hg38.fa",
+  "cnvkit_wgs_reference.ref_flat": "/mnt/data1/ref/hg38/cnvkit/refFlat_hg38.txt",
+  "cnvkit_wgs_reference.crams": ["/mnt/data3/wgs-short-read/crams/NA12878_A_GER2310081EP_D1_D1_N1_LP230622262_UDI0045_PL230271_SEQ_2306270201.cram","/mnt/data3/wgs-short-read/crams/NA24385_A_GER2310083EP_D1_D1_N1_LP230622262_UDI0047_PL230271_SEQ_2306270201.cram"],
+  "cnvkit_wgs_reference.ref_cnn": "/mnt/data3/wgs-short-read/crams/GIAB_ref.hg38.cnn",
+  "cnvkit_wgs_reference.cnvkit_docker": "docker.io/etal/cnvkit:0.9.10",
+  "cnvkit_wgs_reference.processes": 32
 }
 

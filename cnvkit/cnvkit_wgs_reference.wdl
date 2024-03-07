@@ -50,7 +50,7 @@ workflow cnvkit_wgs_reference {
     File ref_cram  # Median coverage cram/CRAM file or GIAB
     File ref_fasta
     File ref_flat
-    String access_bed = "cnvkit_access." + basename(ref_fasta) + ".bed"
+    String access_bed = "cnvkit_access." + basename(ref_fasta, ".fa") + ".bed"
     Int bin_size = 50000  # Default 50000bp for 30X genome
 
     Array[File] crams  # List of crams/crams for creating reference
@@ -58,40 +58,43 @@ workflow cnvkit_wgs_reference {
     String ref_cnn  # Typically a cohort name
 
     # Runtime args
-    Int processes = 16  # TBD
     String cnvkit_docker = "docker.io/etal/cnvkit:0.9.10"
+    Int processes = 32
   }
   call cnvkit_access_autobin {
     input:
       cram = ref_cram,
+      sID = basename(ref_cram, ".cram"),
       fasta = ref_fasta,
       flat = ref_flat,
       access = access_bed,
       bins = bin_size,
       docker = cnvkit_docker,
-      proc = 1,
-      memory_alloc = 0.5
+      proc = 1,  #  AWS and GCS options
+      mem_gb = 1
   }
-  scatter (cram in crams) {
+  scatter (in_cram in crams) {
     call cnvkit_coverage {
       input:
         fasta = ref_fasta,
-        cram = cram,
+        cram = in_cram,
+        sID = basename(in_cram, ".cram"),
         targets = cnvkit_access_autobin.ref_targets_bed,
         antitargets = cnvkit_access_autobin.ref_antitargets_bed,
         docker = cnvkit_docker,
-        proc = processes,
-        memory_alloc = 0.5 * processes
+        proc = processes,  # AWS and GCS options
+        mem_gb = processes
     }
   }
   call cnvkit_reference {
     input:
       cnn_targets = cnvkit_coverage.ref_target_cnn,
       cnn_antitargets = cnvkit_coverage.ref_antitarget_cnn,
+      fasta = ref_fasta,
       ref = ref_cnn,
       docker = cnvkit_docker,
       proc = 1,
-      memory_alloc = 0.5 * length(crams)
+      mem_gb = 1
   }
 }
 
@@ -102,41 +105,39 @@ task cnvkit_access_autobin {
     File flat
     String access
     Int bins
-    String sID = basename(cram, ".cram")
-    String out_targets = sID + ".targets.bed"
-    String out_antitargets = sID + ".antitargets.bed"
+    String sID
 
     String docker
     Int proc
-    Float memory_alloc
+    Int mem_gb
   }
   command {
     set -o pipefail
     set -e
 
     cnvkit.py access \
-    ~{fasta} \
-    --output ~{access}
+    "~{fasta}" \
+    --output "~{access}"
 
     cnvkit.py autobin \
     ~{cram} \
     --method wgs \
     --bp-per-bin ~{bins} \
-    --fasta ~{fasta} \
-    --annotate ~{flat} \
-    --access ~{access} \
-    --target-output-bed ~{out_targets} \
-    --antitarget-output-bed ~{out_antitargets}
+    --fasta "~{fasta}" \
+    --annotate "~{flat}" \
+    --access "~{access}" \
+    --target-output-bed "~{sID}.targets.bed" \
+    --antitarget-output-bed "~{sID}.antitargets.bed"
   }
   runtime {
     docker: docker
-    memory: "~{memory_alloc} GiB"
     cpu: proc
+    memory: "~{mem_gb} GB"
   }
   output {
     File access_bed = access
-    File ref_targets_bed = out_targets
-    File ref_antitargets_bed = out_antitargets
+    File ref_targets_bed = "~{sID}.targets.bed"
+    File ref_antitargets_bed = "~{sID}.antitargets.bed"
   }
 }
 
@@ -146,40 +147,38 @@ task cnvkit_coverage {
     File fasta
     File targets
     File antitargets
-    String sID = basename(cram)  # accepts .cram and .cram
-    String out_file_1 = sID + ".targetcoverage.cnn"
-    String out_file_2 = sID + ".antitargetcoverage.cnn"
+    String sID
 
     String docker
     Int proc
-    Float memory_alloc
+    Int mem_gb
   }
   command {
     set -o pipefail
     set -e
 
     cnvkit.py coverage \
-    --fasta ~{fasta} \
+    --fasta "~{fasta}" \
     --processes ~{proc} \
-    --output ~{out_file_1} \
-    ~{cram} \
-    ~{targets}
-    
+    --output "~{sID}.targetcoverage.cnn" \
+    "~{cram}" \
+    "~{targets}"
+
     cnvkit.py coverage \
-    --fasta ~{fasta} \
+    --fasta "~{fasta}" \
     --processes ~{proc} \
-    --output ~{out_file_2} \
-    ~{cram} \
-    ~{antitargets}
+    --output "~{sID}.antitargetcoverage.cnn" \
+    "~{cram}" \
+    "~{antitargets}"
   }
   runtime {
     docker: docker
-    memory: "~{memory_alloc} GiB"
     cpu: proc
+    memory: "~{mem_gb} GB"
   }
   output {
-    File ref_target_cnn = out_file_1
-    File ref_antitarget_cnn = out_file_2
+    File ref_target_cnn = "~{sID}.targetcoverage.cnn"
+    File ref_antitarget_cnn = "~{sID}.antitargetcoverage.cnn"
   }
 }
 
@@ -187,25 +186,27 @@ task cnvkit_reference {
   input {
     Array[File] cnn_targets
     Array[File] cnn_antitargets
+    String fasta
     String ref
 
     String docker
     Int proc
-    Float memory_alloc
+    Int mem_gb
   }
   command {
     set -o pipefail
     set -e
 
     cnvkit.py reference \
-    cnn_targets \
-    cnn_antitargets \
-    --output ~{ref}
+    --fasta "~{fasta}" \
+    --output "~{ref}" \
+    "~{cnn_targets}" \
+    "~{cnn_antitargets}"
   }
   runtime {
     docker: docker
-    memory: "~{memory_alloc} GiB"
     cpu: proc
+    memory: "~{mem_gb} GB"
   }
   output {
     File ref_cnn = ref
