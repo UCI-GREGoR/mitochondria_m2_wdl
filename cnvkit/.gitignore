@@ -1,2 +1,8 @@
 ./cromwell-workflow-logs
 ./cromwell-executions
+*.swp
+*.cram
+*.crai
+*.bam
+*.bai
+*.bed
