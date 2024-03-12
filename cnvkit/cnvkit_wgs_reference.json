@@ -1,10 +1,9 @@
 {
-  "cnvkit_wgs_reference.ref_cram": "/mnt/data3/wgs-short-read/crams/NA12878_A_GER2310081EP_D1_D1_N1_LP230622262_UDI0045_PL230271_SEQ_2306270201.cram",
+  "cnvkit_wgs_reference.ref_cram": "NA12878.1p.cram",
   "cnvkit_wgs_reference.ref_fasta": "/mnt/data1/ref/hg38/invitae_ref/hg38.fa",
   "cnvkit_wgs_reference.ref_flat": "/mnt/data1/ref/hg38/cnvkit/refFlat_hg38.txt",
-  "cnvkit_wgs_reference.crams": ["/mnt/data3/wgs-short-read/crams/NA12878_A_GER2310081EP_D1_D1_N1_LP230622262_UDI0045_PL230271_SEQ_2306270201.cram","/mnt/data3/wgs-short-read/crams/NA24385_A_GER2310083EP_D1_D1_N1_LP230622262_UDI0047_PL230271_SEQ_2306270201.cram"],
-  "cnvkit_wgs_reference.ref_cnn": "/mnt/data3/wgs-short-read/crams/GIAB_ref.hg38.cnn",
+  "cnvkit_wgs_reference.ref_cnn_name": "GIAB.hg38.cnn",
+  "cnvkit_wgs_reference.participants_file": "participants_cnvkit.txt",
   "cnvkit_wgs_reference.cnvkit_docker": "docker.io/etal/cnvkit:0.9.10",
   "cnvkit_wgs_reference.processes": 32
 }
-

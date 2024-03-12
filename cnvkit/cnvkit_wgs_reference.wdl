@@ -53,9 +53,10 @@ workflow cnvkit_wgs_reference {
     String access_bed = "cnvkit_access." + basename(ref_fasta, ".fa") + ".bed"
     Int bin_size = 50000  # Default 50000bp for 30X genome
 
-    Array[File] crams  # List of crams/crams for creating reference
+    File participants_file  # TSV of crams/crams for creating reference
+    Array[Array[String]] samples = read_tsv(participants_file)
 
-    String ref_cnn  # Typically a cohort name
+    String ref_cnn_name  # Typically a cohort name
 
     # Runtime args
     String cnvkit_docker = "docker.io/etal/cnvkit:0.9.10"
@@ -73,12 +74,12 @@ workflow cnvkit_wgs_reference {
       proc = 1,  #  AWS and GCS options
       mem_gb = 1
   }
-  scatter (in_cram in crams) {
+  scatter (sample in samples) {
     call cnvkit_coverage {
       input:
         fasta = ref_fasta,
-        cram = in_cram,
-        sID = basename(in_cram, ".cram"),
+        sID = sample[0],
+        cram = sample[1],
         targets = cnvkit_access_autobin.ref_targets_bed,
         antitargets = cnvkit_access_autobin.ref_antitargets_bed,
         docker = cnvkit_docker,
@@ -91,10 +92,18 @@ workflow cnvkit_wgs_reference {
       cnn_targets = cnvkit_coverage.ref_target_cnn,
       cnn_antitargets = cnvkit_coverage.ref_antitarget_cnn,
       fasta = ref_fasta,
-      ref = ref_cnn,
+      ref_name = ref_cnn_name,
       docker = cnvkit_docker,
       proc = 1,
       mem_gb = 1
+  }
+  output {
+    File access = cnvkit_access_autobin.access_bed
+    File targets = cnvkit_access_autobin.ref_targets_bed
+    File antitargets = cnvkit_access_autobin.ref_antitargets_bed
+    Array[File] cnn_targets = cnvkit_coverage.ref_target_cnn
+    Array[File] cnn_antitargets = cnvkit_coverage.ref_antitarget_cnn
+    File ref_cnn = cnvkit_reference.ref_cnn
   }
 }
 
@@ -120,7 +129,7 @@ task cnvkit_access_autobin {
     --output "~{access}"
 
     cnvkit.py autobin \
-    ~{cram} \
+    "~{cram}" \
     --method wgs \
     --bp-per-bin ~{bins} \
     --fasta "~{fasta}" \
@@ -186,8 +195,8 @@ task cnvkit_reference {
   input {
     Array[File] cnn_targets
     Array[File] cnn_antitargets
-    String fasta
-    String ref
+    File fasta
+    String ref_name
 
     String docker
     Int proc
@@ -199,9 +208,9 @@ task cnvkit_reference {
 
     cnvkit.py reference \
     --fasta "~{fasta}" \
-    --output "~{ref}" \
-    "~{cnn_targets}" \
-    "~{cnn_antitargets}"
+    --output "~{ref_name}" \
+    ~{sep=" " cnn_targets} \
+    ~{sep=" " cnn_antitargets}
   }
   runtime {
     docker: docker
@@ -209,6 +218,6 @@ task cnvkit_reference {
     memory: "~{mem_gb} GB"
   }
   output {
-    File ref_cnn = ref
+    File ref_cnn = ref_name
   }
 }
