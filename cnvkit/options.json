@@ -1,0 +1,16 @@
+{
+    "default_runtime_attributes": {
+        "docker": "docker.io/etal/cnvkit:0.9.10",
+        "continueOnReturnCode": false,
+        "backend": "Local",
+        "workflow_failure_mode": "ContinueWhilePossible",
+        "final_workflow_outputs_dir": "/mnt/data1/tools/WDLs/cnvkit/outputs",
+        "use_relative_output_paths": true,
+        "final_workflow_log_dir": "wf_logs",
+        "final_call_logs_dir": "call_logs",
+        "write_to_cache": true,
+        "read_from_cache": true,
+        "memory_retry_multiplier": 2.0
+    }
+}
+

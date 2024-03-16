@@ -47,53 +47,63 @@ version 1.0
 workflow cnvkit_wgs_process {
   input {
     # Sample args
-    File sample_cram
-    File sample_vcf
+    File participants_file
+    Array[Array[String]] samples = read_tsv(participants_file)
 
     # Reference args
     File ref_targets_bed  # Generated from cnvkit_wgs_reference
     File ref_antitargets_bed  # Generated from cnvkit_wgs_reference
     File ref_cnn  # Generated from cnvkit_wgs_reference
-    File ref_fasta
+    File ref_fasta  # Needed for CRAM parsing
+
+    # Tool settings - defaults
+    String call_method = "clonal"
+    Float scatter_plot_width = 25.6
+    Float scatter_plot_height = 19.2
 
     # Runtime args
-    Int processes = 16  # TBD
     String cnvkit_docker = "docker.io/etal/cnvkit:0.9.10"
+    Int processes = 32  # TBD based on cnvkit.py coverage multithreading efficiency
   }
-  call cnvkit_coverage {
-    input:
-      fasta = ref_fasta,
-      cram = sample_cram,
-      targets = ref_targets_bed,
-      antitargets = ref_antitargets_bed,
-      docker = cnvkit_docker,
-      proc = processes,
-      memory_alloc = 0.5 * processes,
-  }
-  call cnvkit_fix_segment_call_export_plot {
-    input:
-      target_cnn = cnvkit_coverage.sample_target_cnn,
-      antitarget_cnn = cnvkit_coverage.sample_antitarget_cnn,
-      ref = ref_cnn,
-      call_method = "clonal",
-      vcf = sample_vcf,
-      scatter_plot_width = 25.6,
-      scatter_plot_height = 19.2,
-      docker = cnvkit_docker,
-      proc = 1,
-      memory_alloc = 2.0,
+  scatter(sample in samples) {
+    call cnvkit_coverage {
+      input:
+        sID = sample[0],
+        cram = sample[1],
+        crai = sample[2],
+        fasta = ref_fasta,
+        targets = ref_targets_bed,
+        antitargets = ref_antitargets_bed,
+        docker = cnvkit_docker,
+        proc = processes,
+        memory_alloc = 0.5 * processes
+    }
+    call cnvkit_fix_segment_call_export_plot {
+      input:
+        sID = sample[0],
+        vcf = sample[3],
+        sex = sample[4],
+        target_cnn = cnvkit_coverage.sample_target_cnn,
+        antitarget_cnn = cnvkit_coverage.sample_antitarget_cnn,
+        ref = ref_cnn,
+        c_method = call_method,
+        s_plot_w = scatter_plot_width,
+        s_plot_h = scatter_plot_height,
+        docker = cnvkit_docker,
+        proc = 1,
+        memory_alloc = 2.0
+    }
   }
 }
 
 task cnvkit_coverage {
   input {
     File cram
+    File crai
     File fasta
     File targets
     File antitargets
-    String sID = basename(cram, ".cram")  # accepts .cram
-    String targets_filename = sID + ".targetcoverage.cnn"
-    String antitargets_filename = sID + ".antitargetcoverage.cnn"
+    String sID
 
     String docker
     Int proc
@@ -105,48 +115,44 @@ task cnvkit_coverage {
 
     # cram index must be formatted as "${sID}.cram.crai" and in the same path as the cram
     cnvkit.py coverage \
-    --fasta ~{fasta} \
+    --fasta "~{fasta}" \
     --processes ~{proc} \
-    --output ~{targets_filename} \
-    ~{cram} \
-    ~{targets}
-    
+    --output "~{sID}.targetcoverage.cnn" \
+    "~{cram}" \
+    "~{targets}"
+
+    # antitargets coverage (empty file for WGS)
     cnvkit.py coverage \
-    --fasta ~{fasta} \
+    --fasta "~{fasta}" \
     --processes ~{proc} \
-    --output ~{antitargets_filename} \
-    ~{cram} \
-    ~{antitargets}
+    --output "~{sID}.antitargetcoverage.cnn" \
+    "~{cram}" \
+    "~{antitargets}"
   }
   runtime {
     docker: docker
-    memory: "~{memory_alloc} GiB"
     cpu: proc
+    memory: "~{memory_alloc} GiB"
   }
   output {
-    File sample_target_cnn = targets_filename
-    File sample_antitarget_cnn = antitargets_filename
+    File sample_target_cnn = "~{sID}.targetcoverage.cnn"
+    File sample_antitarget_cnn = "~{sID}.antitargetcoverage.cnn"
   }
 }
 
 task cnvkit_fix_segment_call_export_plot {
   input {
+    String sID
+    File vcf
+    String sex
     File target_cnn
     File antitarget_cnn
+
     File ref
-    File vcf
-    String call_method
+    String c_method
 
-    String sID = basename(target_cnn, ".targetcoverage.cnn")
-    String cnr_filename = sID + ".cnr"
-    String cns_filename = sID + ".cns"
-    String call_cns_filename = sID + ".call.cns"
-    String scatter_png_name = sID + ".scatter.png"
-    String diagram_pdf_name = sID + ".diagram.pdf"
-    String cnv_vcf_name = sID + ".cnv.vcf"
-
-    Float scatter_plot_width
-    Float scatter_plot_height
+    Float s_plot_w
+    Float s_plot_h
 
     String docker
     Int proc
@@ -157,50 +163,50 @@ task cnvkit_fix_segment_call_export_plot {
     set -e
 
     cnvkit.py fix \
-    ~{target_cnn} \
-    ~{antitarget_cnn} \
-    ~{ref} \
-    --output ~{cnr_filename}
+    "~{target_cnn}" \
+    "~{antitarget_cnn}" \
+    "~{ref}" \
+    --output "~{sID}.cnr"
 
     cnvkit.py segment \
-    ~{cnr_filename} \
-    --output ~{cns_filename}
+    "~{sID}.cnr" \
+    --output "~{sID}.cns"
 
     cnvkit.py call \
-    ~{cns_filename} \
-    --vcf ~{vcf} \
-    --method ~{call_method} \
-    --output ~{call_cns_filename}
+    "~{sID}.cns" \
+    --vcf "~{vcf}" \
+    --method "~{c_method}" \
+    --output "~{sID}.call.cns"
 
     cnvkit.py export vcf \
-    ~{cns_filename} \
-    --sample-id ~{sID} \
-    --output ~{cnv_vcf_name}
+    "~{sID}.cns" \
+    --sample-id "~{sID}" \
+    --output "~{sID}.cnv.vcf"
 
     cnvkit.py scatter \
-    --segment ~{cns_filename} \
-    ~{cnr_filename} \
-    --vcf ~{vcf} \
-    --fig-size ~{scatter_plot_width} ~{scatter_plot_height} \
-    --output ~{scatter_png_name}
+    --segment "~{sID}.cns" \
+    "~{sID}.cnr" \
+    --vcf "~{vcf}" \
+    --fig-size ~{s_plot_w} ~{s_plot_h} \
+    --output "~{sID}.scatter.png"
 
     cnvkit.py diagram \
-    --segment ~{cns_filename} \
-    ~{cnr_filename} \
+    --segment "~{sID}.cns" \
+    "~{sID}.cnr" \
     --no-gene-labels \
-    --output ~{diagram_pdf_name}
+    --output "~{sID}.diagram.pdf"
   }
   runtime {
     docker: docker
-    memory: "~{memory_alloc} GiB"
     cpu: proc
+    memory: "~{memory_alloc} GiB"
   }
   output {
-    File cnr_file = cnr_filename
-    File cns_file = cns_filename
-    File call_cns_file = call_cns_filename
-    File cnv_vcf = cnv_vcf_name
-    File scatter_png = scatter_png_name
-    File diagram_pdf = diagram_pdf_name
+    File cnr_file = "~{sID}.cnr"
+    File cns_file = "~{sID}.cns"
+    File call_cns_file = "~{sID}.call.cns"
+    File cnv_vcf = "~{sID}.cnv.vcf"
+    File scatter_png = "~{sID}.scatter.png"
+    File diagram_pdf = "~{sID}.diagram.pdf"
   }
 }

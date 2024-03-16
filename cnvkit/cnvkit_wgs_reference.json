@@ -1,9 +1,0 @@
-{
-  "cnvkit_wgs_reference.ref_cram": "NA12878.1p.cram",
-  "cnvkit_wgs_reference.ref_fasta": "/mnt/data1/ref/hg38/invitae_ref/hg38.fa",
-  "cnvkit_wgs_reference.ref_flat": "/mnt/data1/ref/hg38/cnvkit/refFlat_hg38.txt",
-  "cnvkit_wgs_reference.ref_cnn_name": "GIAB.hg38.cnn",
-  "cnvkit_wgs_reference.participants_file": "participants_cnvkit.txt",
-  "cnvkit_wgs_reference.cnvkit_docker": "docker.io/etal/cnvkit:0.9.10",
-  "cnvkit_wgs_reference.processes": 32
-}

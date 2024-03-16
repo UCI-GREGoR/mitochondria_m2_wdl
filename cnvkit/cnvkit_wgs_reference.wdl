@@ -9,7 +9,7 @@ version 1.0
 ## Requirements/expectations :
 ## - Samples and references in pair-end short-read mapped cram/CRAM format
 ## - Reference samples to call CNVs against (unaffected relatives of probands)
-## - Matching reference genome for crams/crams (e.g. hg38-no-alt)
+## - Matching reference genome for bams/crams (e.g. hg38-no-alt)
 ##
 ## Output :
 ## - CNR and CNS coverage files, scatter and diagram plots
@@ -47,10 +47,14 @@ version 1.0
 workflow cnvkit_wgs_reference {
   input {
     # Reference args
+    String ref_name
     File ref_cram  # Median coverage cram/CRAM file or GIAB
     File ref_fasta
     File ref_flat
-    String access_bed = "cnvkit_access." + basename(ref_fasta, ".fa") + ".bed"
+    Int gap_size = 5000  # cnvkit.py access default gap size
+    File bb2bed  # bigBedToBed binary from UCSC
+    File exclude_bed  # ENCODE Blacklist bed file
+    String access_name
     Int bin_size = 50000  # Default 50000bp for 30X genome
 
     File participants_file  # TSV of crams/crams for creating reference
@@ -65,10 +69,13 @@ workflow cnvkit_wgs_reference {
   call cnvkit_access_autobin {
     input:
       cram = ref_cram,
-      sID = basename(ref_cram, ".cram"),
+      sID = ref_name,
       fasta = ref_fasta,
       flat = ref_flat,
-      access = access_bed,
+      bigBedToBed = bb2bed,
+      gap = gap_size,
+      excludes = exclude_bed,
+      access = access_name,
       bins = bin_size,
       docker = cnvkit_docker,
       proc = 1,  #  AWS and GCS options
@@ -80,6 +87,7 @@ workflow cnvkit_wgs_reference {
         fasta = ref_fasta,
         sID = sample[0],
         cram = sample[1],
+        crai = sample[2],
         targets = cnvkit_access_autobin.ref_targets_bed,
         antitargets = cnvkit_access_autobin.ref_antitargets_bed,
         docker = cnvkit_docker,
@@ -97,21 +105,17 @@ workflow cnvkit_wgs_reference {
       proc = 1,
       mem_gb = 1
   }
-  output {
-    File access = cnvkit_access_autobin.access_bed
-    File targets = cnvkit_access_autobin.ref_targets_bed
-    File antitargets = cnvkit_access_autobin.ref_antitargets_bed
-    Array[File] cnn_targets = cnvkit_coverage.ref_target_cnn
-    Array[File] cnn_antitargets = cnvkit_coverage.ref_antitarget_cnn
-    File ref_cnn = cnvkit_reference.ref_cnn
-  }
 }
 
 task cnvkit_access_autobin {
   input {
     File cram
+    File crai
     File fasta
     File flat
+    Int gap
+    File excludes
+    File bigBedToBed
     String access
     Int bins
     String sID
@@ -124,9 +128,17 @@ task cnvkit_access_autobin {
     set -o pipefail
     set -e
 
+    #wget "~{excludes}"
+    #wget "~{bigBedToBed}"
+    sh "~{bigBedToBed}" \
+    "~{excludes}" \
+    "encBlackList.bed"
+
     cnvkit.py access \
-    "~{fasta}" \
-    --output "~{access}"
+    --min-gap-size ~{gap} \
+    --exclude "encBlackList.bed" \
+    --output "~{access}" \
+    "~{fasta}"
 
     cnvkit.py autobin \
     "~{cram}" \

@@ -1,2 +1,0 @@
-NA12878.1p	NA12878.1p.cram	NA12878.1p.crai	F
-NA24385.1p	NA24385.1p.cram	NA24385.1p.crai	M
