@@ -5,11 +5,13 @@ Workflows can be broken down as follows:
 * Pooled coverage reference generation
   * Pooled male and female references are generated using cohorts of healthy samples, unlikely to have copy number alterations.
   * Samples are specified in a corresponding "participants.txt" tab-separated table with the following format:
-  **Participant ID** | **BAM/CRAM File URI** | **BAI/CRAI File URI** | **VCF File URI** | **Participant Sex (f or m)**
-  ---|---|---|---|---
-  "PMGRC-1-1-0"|"s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-1-1-0.cram"|"s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-1-1-0.crai"|"s3://pmgrc-gregor-data/wgs-short-read/../snv_vcfs/PMGRC-1-1-0.snv.vcf.gz"|f
-  "PMGRC-2-1-2"|"s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-2-1-2.cram"|"s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-2-1-2.crai"|"s3://pmgrc-gregor-data/wgs-short-read/../snv_vcfs/PMGRC-2-1-2.snv.vcf.gz"|f
-  * Headers are not supported in the "participants.txt" file. CSV must be converted to TSV.
+
+  | **Participant ID** | **BAM/CRAM File URI** | **BAI/CRAI File URI** | **VCF File URI** | **Participant Sex (f or m)** |
+  | ------------------ | --------------------- | --------------------- | ---------------- | :--------------------------: |
+  | PMGRC-1-1-0 | s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-1-1-0.cram | s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-1-1-0.crai | s3://pmgrc-gregor-data/wgs-short-read/../snv_vcfs/PMGRC-1-1-0.snv.vcf.gz | f |
+  | PMGRC-2-1-2 | s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-2-1-2.cram | s3://pmgrc-gregor-data/wgs-short-read/../crams/PMGRC-2-1-2.crai | s3://pmgrc-gregor-data/wgs-short-read/../snv_vcfs/PMGRC-2-1-2.snv.vcf.gz | f |
+
+  * Headers are not supported in the "participants.txt" file. CSV must be converted to TSV. No whitespace characters allowed in participant IDs. 
   * The participants filename must match what is provided in the corresponding "inputs.json"
   * VCF files and participant sex are not necessary when generating a reference and the columns may be left blank
   * For both reference generation and processing, each BAM/CRAM is expected to be indexed prior to processing
