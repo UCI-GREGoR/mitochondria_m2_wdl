@@ -33,14 +33,12 @@ Note that MITOMAP disease requires reformatting with PicardTools and tAPOGEE nee
 For MITOMAP Disease, make the following edits:
 * Add the following FORMAT fields to the header with your favorite text editor:
 
-`
-##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
-##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
-##FORMAT=<ID=FT,Number=.,Type=String,Description="Genotype-level filter">
-##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
-##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification">
-`
+`##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">`
+`##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">`
+`##FORMAT=<ID=FT,Number=.,Type=String,Description="Genotype-level filter">`
+`##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">`
+`##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">`
+`##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification">`
 
 For tAPOGEE, make the following edits with your favorite spreadsheet editor:
 
@@ -56,22 +54,25 @@ For tAPOGEE, make the following edits with your favorite spreadsheet editor:
 
 * Add the following VCF header:
 
-`
-##fileformat=VCFv4.2
-##FILTER=<ID=PASS,Description="All filters passed">
-##fileDate=20240503
-##source=https://mitimpact.css-mendel.it/cdn/tAPOGEE_2024.0.1.txt.zip
-##reference=https://www.ncbi.nlm.nih.gov/nuccore/251831106
-##contig=<ID=chrM,length=16569,assembly=hg38>
-##INFO=<ID=Gene_symbol,Number=1,Type=String,Description="Gene symbol">
-##INFO=<ID=tAPOGEE_score,Number=1,Type=Float,Description="tAPOGEE score">
-##INFO=<ID=tAPOGEE_unbiased_score,Number=1,Type=Float,Description="tAPOGEE unbiased score">
-`
+`##fileformat=VCFv4.2`
+`##FILTER=<ID=PASS,Description="All filters passed">`
+`##fileDate=20240503`
+`##source=https://mitimpact.css-mendel.it/cdn/tAPOGEE_2024.0.1.txt.zip`
+`##reference=https://www.ncbi.nlm.nih.gov/nuccore/251831106`
+`##contig=<ID=chrM,length=16569,assembly=hg38>`
+`##INFO=<ID=Gene_symbol,Number=1,Type=String,Description="Gene symbol">`
+`##INFO=<ID=tAPOGEE_score,Number=1,Type=Float,Description="tAPOGEE score">`
+`##INFO=<ID=tAPOGEE_unbiased_score,Number=1,Type=Float,Description="tAPOGEE unbiased score">`
+
 * Save as '.txt' file. Make sure it stays tab-delimited. 
 
 * Rename the file extension as .vcf with your file explorer. Use a tool like dos2unix to edit the line endings.
 
 # Running m2_anno.sh in your local cromwell instance
+* Download the WDL ZIP folder from [Dockstore](https://dockstore.org/api/workflows/8801/zip/256948).
+* Unzip it in your current working directory.
+* Download the WDL references to a path on your local instance.
+* Edit the input JSON template so the file paths match their actual locations.
 * Make an input JSON folder for each sample's input JSON using the template provided in this repository.
 * Edit the variables for `cromwell` and `refPath` to match your installation
 * `sh m2_anno.sh intput_json` where `input_json` is the path to the input JSON folder
