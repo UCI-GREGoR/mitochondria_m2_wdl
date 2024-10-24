@@ -34,10 +34,15 @@ For MITOMAP Disease, make the following edits:
 * Add the following FORMAT fields to the header with your favorite text editor:
 
 `##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">`
+
 `##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">`
+
 `##FORMAT=<ID=FT,Number=.,Type=String,Description="Genotype-level filter">`
+
 `##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">`
+
 `##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">`
+
 `##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Normalized, Phred-scaled likelihoods for genotypes as defined in the VCF specification">`
 
 For tAPOGEE, make the following edits with your favorite spreadsheet editor:
@@ -55,13 +60,21 @@ For tAPOGEE, make the following edits with your favorite spreadsheet editor:
 * Add the following VCF header:
 
 `##fileformat=VCFv4.2`
+
 `##FILTER=<ID=PASS,Description="All filters passed">`
+
 `##fileDate=20240503`
+
 `##source=https://mitimpact.css-mendel.it/cdn/tAPOGEE_2024.0.1.txt.zip`
+
 `##reference=https://www.ncbi.nlm.nih.gov/nuccore/251831106`
+
 `##contig=<ID=chrM,length=16569,assembly=hg38>`
+
 `##INFO=<ID=Gene_symbol,Number=1,Type=String,Description="Gene symbol">`
+
 `##INFO=<ID=tAPOGEE_score,Number=1,Type=Float,Description="tAPOGEE score">`
+
 `##INFO=<ID=tAPOGEE_unbiased_score,Number=1,Type=Float,Description="tAPOGEE unbiased score">`
 
 * Save as '.txt' file. Make sure it stays tab-delimited. 
