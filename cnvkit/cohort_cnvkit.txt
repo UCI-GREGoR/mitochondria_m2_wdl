@@ -1,2 +1,0 @@
-PMGRC-101-101-0	/mnt/data3/wgs-short-read/crams/PMGRC-101-101-0_LS4268818_SQ6050.cram	/mnt/data3/wgs-short-read/crams/PMGRC-101-101-0_LS4268818_SQ6050.crai	/mnt/data3/wgs-short-read/snv_vcfs/PMGRC-101-101-0_LS4268818_SQ6050.snv.vcf.gz	m
-PMGRC-99-101-2	/mnt/data3/wgs-short-read/crams/PMGRC-99-101-2_LS4268817_SQ6049.cram	/mnt/data3/wgs-short-read/crams/PMGRC-99-101-2_LS4268817_SQ6049.crai	/mnt/data3/wgs-short-read/snv_vcfs/PMGRC-99-101-2_LS4268817_SQ6049.snv.vcf.gz	f

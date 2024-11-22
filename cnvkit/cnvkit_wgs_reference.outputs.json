@@ -1,9 +1,0 @@
-{
-  "cnvkit_wgs_reference.cnvkit_access_autobin.access_bed": "File",
-  "cnvkit_wgs_reference.cnvkit_reference.ref_cnn": "File",
-  "cnvkit_wgs_reference.cnvkit_access_autobin.ref_targets_bed": "File",
-  "cnvkit_wgs_reference.cnvkit_coverage.ref_target_cnn": "Array[File]",
-  "cnvkit_wgs_reference.cnvkit_access_autobin.ref_antitargets_bed": "File",
-  "cnvkit_wgs_reference.cnvkit_coverage.ref_antitarget_cnn": "Array[File]"
-}
-

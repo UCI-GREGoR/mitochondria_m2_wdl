@@ -20,8 +20,6 @@
   "MitochondriaPipeline.mt_shifted_sa": "gs://gcp-public-data--broad-references/hg38/v0/chrM/Homo_sapiens_assembly38.chrM.shifted_by_8000_bases.fasta.sa",
   "MitochondriaPipeline.blacklisted_sites": "gs://gcp-public-data--broad-references/hg38/v0/chrM/blacklist_sites.hg38.chrM.bed",
   "MitochondriaPipeline.blacklisted_sites_index": "gs://gcp-public-data--broad-references/hg38/v0/chrM/blacklist_sites.hg38.chrM.bed.idx",
-  "MitochondriaPipeline.blacklisted_sites_shifted": "gs://gcp-public-data--broad-references/hg38/v0/chrM/blacklist_sites.hg38.chrM.shifted_by_8000_bases.fixed.bed",
-  "MitochondriaPipeline.blacklisted_sites_shifted_index": "gs://gcp-public-data--broad-references/hg38/v0/chrM/blacklist_sites.hg38.chrM.shifted_by_8000_bases.fixed.bed.idx",
   "MitochondriaPipeline.control_region_shifted_reference_interval_list": "gs://gcp-public-data--broad-references/hg38/v0/chrM/control_region_shifted.chrM.interval_list",
   "MitochondriaPipeline.shift_back_chain": "gs://gcp-public-data--broad-references/hg38/v0/chrM/ShiftBack.chain",
   "MitochondriaPipeline.non_control_region_interval_list": "gs://gatk-best-practices/mitochondria-pipeline/non_control_region.interval_list",
