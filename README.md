@@ -21,7 +21,7 @@ In summary, this pipeline performs the following tasks:
 * Have git installed with the package manager of your host operating system.
 * * For Ubuntu or Debian:
 * * `sudo apt install git`
-  * For Red Hat Enterprise Linux, CentOS, Rocky Linux, or Fedora:
+  * For Red Hat Enterprise Linux (RHEL), CentOS, Rocky Linux, or Fedora:
   * `sudo dnf install git`
 * * For Mac OS with [brew](https://brew.sh/) installed:
 * * `brew install git`
@@ -29,7 +29,8 @@ In summary, this pipeline performs the following tasks:
 * `git clone https://github.com/UCI-GREGoR/mitochondria_m2_wdl.git`
 * A conda environment is required. Please install with [mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html) or [miniconda3](https://docs.anaconda.com/miniconda/install/#quick-command-line-install)
 * For a local runtime, a cromwell installation is required. See the [Cromwell readthedocs](https://cromwell.readthedocs.io/en/stable/Releases/). In my example I used the Conda installation. 
-* A backend such as [Docker](https://docs.docker.com/engine/install/) or [Apptainer](https://apptainer.org/docs/user/latest/quick_start.html) is also required to use cromwell. Docker was used in my case.
+* A backend such as [Docker](https://docs.docker.com/engine/install/) or [Apptainer](https://apptainer.org/docs/user/latest/quick_start.html) is also required to use cromwell. Docker for Linux was used in my case.
+* * For Mac OS and Windows, use [Docker Desktop](https://docs.docker.com/desktop/)
 
 * A local [GATK installation](https://gatk.broadinstitute.org/hc/en-us/articles/360036194592-Getting-started-with-GATK4) for running GATK VariantAnnotator. In my case I used the docker image for GATK release 4.5.0.0.
 * `docker pull broadinstitute/gatk:4.5.0.0`
@@ -46,8 +47,10 @@ In summary, this pipeline performs the following tasks:
 * Download the WDL ZIP folder from [Dockstore](https://dockstore.org/api/workflows/8801/zip/256948).
 * `unzip github.com-broadinstitute-gatk-MitochondriaPipeline-4.5.0.0`
 Outside of the WDL the following annotations are performed
-* [gnomAD v3.1 sites](https://gnomad.broadinstitute.org/downloads#v3-mitochondrial-dna)
-* [clinvar_20240407](https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/archive_2.0/2024/clinvar_20240407.vcf.gz)
+* [gnomAD v3.1 sites VCF](https://storage.googleapis.com/gcp-public-data--gnomad/release/3.1/vcf/genomes/gnomad.genomes.v3.1.sites.chrM.vcf.bgz)
+* [gnomAD_v3.1 sites VCF Index](https://storage.googleapis.com/gcp-public-data--gnomad/release/3.1/vcf/genomes/gnomad.genomes.v3.1.sites.chrM.vcf.bgz.tbi)
+* [clinvar_20240407 VCF](https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/archive_2.0/2024/clinvar_20240407.vcf.gz)
+* [clinvar_20240407 VCF Index](https://ftp.ncbi.nlm.nih.gov/pub/clinvar/vcf_GRCh38/archive_2.0/2024/clinvar_20240407.vcf.gz.tbi)
 * [mitomap_disease](https://mitomap.org/cgi-bin/disease.cgi?format=vcf)
 * [tAPOGEE_2024.0.1](https://mitimpact.css-mendel.it/cdn/t-APOGEE_2024.0.1.txt.zip)
 Note that MITOMAP disease requires reformatting with PicardTools and tAPOGEE needs to be restructured as a VCF to work with GATK VariantAnnotator
@@ -89,7 +92,7 @@ For tAPOGEE, make the following edits with your favorite spreadsheet editor:
 ```
 * Save as '.txt' file. Make sure it stays tab-delimited. 
 
-* Rename the file extension as .vcf with your file explorer. Use a tool like dos2unix to edit the line endings.
+* Rename the file extension as .vcf with your file explorer. Use a tool like dos2unix to convert the line endings from Windows format to UNIX format.
 
 # Running m2_anno.sh in your local cromwell instance
 
@@ -97,7 +100,7 @@ For tAPOGEE, make the following edits with your favorite spreadsheet editor:
 * Download the WDL references to a path on your local instance.
 * Edit the input JSON template so the file paths match their actual locations.
 * Make an input JSON folder for each sample's input JSON using the template provided in this repository.
-* Edit the variables for `cromwell` and `refPath` to match your installation
+* Edit the variables for `refPath` to match your installation
 * `sh m2_anno.sh intput_json` where `input_json` is the path to the input JSON folder
 * When complete, this will create an `output_vcf` folder where final VCFs and annotated VCFs go.
 
