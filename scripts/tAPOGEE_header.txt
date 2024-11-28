@@ -1,0 +1,9 @@
+##fileformat=VCFv4.2
+##FILTER=<ID=PASS,Description="All filters passed">
+##fileDate=20240503
+##source=https://mitimpact.css-mendel.it/cdn/tAPOGEE_2024.0.1.txt.zip
+##reference=https://www.ncbi.nlm.nih.gov/nuccore/251831106
+##contig=<ID=chrM,length=16569,assembly=hg38>
+##INFO=<ID=Gene_symbol,Number=1,Type=String,Description="Gene symbol">
+##INFO=<ID=tAPOGEE_score,Number=1,Type=Float,Description="tAPOGEE score">
+##INFO=<ID=tAPOGEE_unbiased_score,Number=1,Type=Float,Description="tAPOGEE unbiased score">
