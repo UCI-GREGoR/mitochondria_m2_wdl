@@ -1,1 +1,1 @@
-ref/Homo_sapiens_assembly38.fasta filter=lfs diff=lfs merge=lfs -text
+ref/Homo_sapiens_assembly38.fasta.gz filter=lfs diff=lfs merge=lfs -text
