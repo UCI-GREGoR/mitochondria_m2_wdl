@@ -1,7 +1,7 @@
 home/*
 cromwell*
 ref/chrM/t-APOGEE_2024.0.1.*
-ref/Homo_sapiens_assembly38.fasta*
+ref/Homo_sapiens_assembly38.fasta
 bams/*.bam*
 bams/*.cram*
 !bams/NA12878.alignedHg38.duplicateMarked.baseRealigned.bam
