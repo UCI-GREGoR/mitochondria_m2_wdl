@@ -10,6 +10,15 @@ try:
 except:
     print(f'{apogee_prefix}.txt is missing. Please download it per GitHub readme instructions')
 
+# Rename score columns to remove whitespace
+apogee_txt_df.rename(columns={
+    'Chr':'#CHROM',
+    'Pos':'POS',
+    'Ref':'REF',
+    'Alt':'ALT',
+    't-APOGEE score':'t-APOGEE_score',
+    't-APOGEE unbiased score':'t-APOGEE_unbiased_score'
+    },inplace=True)
 # Fill VCF columns for ID, QUAL, and FILTER with blank values
 apogee_txt_df['ID'] = '.'
 apogee_txt_df['QUAL'] = '.'

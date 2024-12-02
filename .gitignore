@@ -1,4 +1,17 @@
 home/*
 cromwell*
+ref/chrM/t-APOGEE_2024.0.1.*
+ref/Homo_sapiens_assembly38.fasta*
+bams/*.bam*
+bams/*.cram*
+!bams/NA12878.alignedHg38.duplicateMarked.baseRealigned.bam
+!bams/NA12878.alignedHg38.duplicateMarked.baseRealigned.bam.bai
+input_jsons/*
+!input_jsons/ExampleInputMitochondriaPipeline.json
+!input_jsons/NA12878_demo.json
+output_vcfs/*
+.*
+!.git*
+AnVIL_tables/*
 
 **DS_Store**
