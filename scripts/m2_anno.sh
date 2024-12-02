@@ -9,7 +9,7 @@ set -e
 # Please change paths for cromwell and refPath which has reference files
 work_path="../"
 ref_path="${work_path}/ref/"
-input_json="${work_path}/input_json"
+input_json="${work_path}/input_jsons"
 
 # Run cromwell locally
 # * Activate cromwell conda environment before running
@@ -17,9 +17,11 @@ for json in ${input_json}/*.json ; do
     cromwell run "./MitochondriaPipeline.wdl" -i $json
 # This will create new folders 'cromwell-executions' and 'cromwell-workflow-logs'
 # Copy results to a new folder in the current working directory
-output_vcf=${work_path}/output_vcf
+cromwell_path="${work_path}/cromwell-executions/MitochondriaPipeline"
+vcf_subpath="call-SplitMultiAllelicSites/execution"
+output_vcf="${work_path}/output_vcfs"
 mkdir $output_vcf
-cp ${work_path}/cromwell-executions/MitochondriaPipeline/*/call-SplitMultiAllelicSites/execution/*.final.split.vcf* \
+cp ${cromwell_path}/*/${vcf_subpath}/*.final.split.vcf* \
     ${output_vcf}/
 
 # Annotation with GATK VariantAnnotator
@@ -47,3 +49,7 @@ for vcf in ${output_vcf}/*.final.split.vcf ; do
         --expression "clinvar.CLNREVSTAT" \
         --expression "mitomap.Disease" \
         --expression "tApogee.tAPOGEE_score"
+done
+
+python3 mito_report.py \
+
